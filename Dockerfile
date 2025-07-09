@@ -1,5 +1,5 @@
 #build stage
-FROM node:18-alphine AS build
+FROM node:20-alpine AS build
 
 WORKDIR /app
 
@@ -13,7 +13,7 @@ RUN npm run build
 
 
 #prod
-FROM node:18-alphine 
+FROM node:20-alpine 
 
 WORKDIR /app
 
@@ -23,12 +23,12 @@ ENV NODE_ENV=${NODE_ENV}
 COPY --from=build /app/dist ./dist
 
 COPY package*.json ./
-
+RUN npm pkg delete scripts.prepare
 RUN npm install --only=production
 
 RUN rm package*.json
 
 EXPOSE 3000
 
-CMD ['node', 'dist/main.js']
+CMD ["node", "dist/main.js"]
 
